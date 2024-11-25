@@ -1,0 +1,31 @@
+{
+  "name": "receipt-processor-challenge",
+  "version": "1.0.0",
+  "description": "A simple express app that process and stores receipt data in JSON format.",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fetch-rewards/receipt-processor-challenge.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fetch-rewards/receipt-processor-challenge/issues"
+  },
+  "homepage": "https://github.com/fetch-rewards/receipt-processor-challenge#readme",
+  "dependencies": {
+    "@types/express": "^5.0.0",
+    "express": "^4.21.1",
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}

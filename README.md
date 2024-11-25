@@ -1,3 +1,17 @@
+To use this app, first navigate to its root directory in your terminal of choice.
+
+# How To Build
+
+sudo docker build -t receipt-processor-challenge .
+
+# How To Run
+
+sudo docker run -p 3000:3000 receipt-processor-challenge
+
+# How To Stop
+
+sudo docker stop $(sudo docker ps -q --filter ancestor=receipt-processor-challenge)
+
 # Receipt Processor
 
 Build a webservice that fulfils the documented API. The API is described below. A formal definition is provided 
