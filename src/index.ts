@@ -1,6 +1,7 @@
 // imports
 import express from 'express';
-import { serverErrorHandler, pageNotFoundHandler } from './errorHandlers';
+import { pageNotFoundHandler, serverErrorHandler } from './errorHandlers';
+import { homeRoute, processReceiptsRoute, getPointsRoute } from './routes';
 
 // constants
 const app = express();
@@ -11,10 +12,9 @@ app.use(express.json());
 app.use(serverErrorHandler);
 
 // routes
-app.get('/', (req, res) => {
-  res.send('Hello from the Receipt Processing Server!');
-});
-
+app.use('/', homeRoute);
+app.use('/receipts', processReceiptsRoute);
+app.use('/receipts', getPointsRoute);
 app.all('*', pageNotFoundHandler);
 
 // start server
