@@ -6,11 +6,11 @@ sudo docker build -t receipt-processor-challenge .
 
 # How To Run
 
-sudo docker run -p 3000:3000 receipt-processor-challenge
+sudo docker run -p 3000:3000 -d --name rpc_d receipt-processor-challenge
 
 # How To Stop
 
-sudo docker stop $(sudo docker ps -q --filter ancestor=receipt-processor-challenge)
+sudo docker stop rpc_d
 
 # Receipt Processor
 
