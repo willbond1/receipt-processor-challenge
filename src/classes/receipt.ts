@@ -1,3 +1,5 @@
+import { Request, Response, NextFunction } from "express";
+
 export interface Receipt {
     retailer: string;
     purchaseDate: string;
@@ -9,40 +11,61 @@ export interface Receipt {
     total: string;
 }
 
-// returns true if the receipt is valid, false otherwise
-export function validateReceipt(receipt: Receipt) { 
-    if(!(new RegExp("^[\\w\\s\\-&]+$")).test(receipt.retailer)) {
-        return false;
+// middleware function for validating request bodies of this type
+export function validateReceipt(req: Request, res: Response, next: NextFunction) {
+    function invalidReceiptError() {
+        res.status(400).json({ error: `Provided receipt is invalid: ${req.body}`});
     }
 
-    if(isNaN((new Date(receipt.purchaseDate)).getTime())) {
-        return false;
+    const { retailer, purchaseDate, purchaseTime, items, total} = req.body;
+    if(typeof retailer !== 'string' ||
+        typeof purchaseDate !== 'string' ||
+        typeof purchaseTime !== 'string' ||
+        !Array.isArray(items) ||
+        typeof total !== 'string'
+    ) {
+        invalidReceiptError();
     }
 
-    if(!/^(?:[01][0-9]|2[0-3]):[0-5][0-9]$/.test(receipt.purchaseTime)) {
-        return false;
+    if(!(new RegExp("^[\\w\\s\\-&]+$")).test(retailer)) {
+        invalidReceiptError();
+    }
+
+    if(isNaN((new Date(purchaseDate)).getTime())) {
+        invalidReceiptError();
+    }
+
+    if(!/^(?:[01][0-9]|2[0-3]):[0-5][0-9]$/.test(purchaseTime)) {
+        invalidReceiptError();
     }
 
     let runningTotalInCents = 0; // in cents to maintain accuracy
-    for(const item of receipt.items) {
-        if(!(new RegExp("^[\\w\\s\\-]+$")).test(item.shortDescription)) {
-            return false;
+    for(const item of items) {
+        const { shortDescription, price } = item;
+        if(typeof shortDescription !== 'string' ||
+            typeof price !== 'string'
+        ) {
+            invalidReceiptError();
         }
 
-        if(!(new RegExp("^\\d+\\.\\d{2}$")).test(item.price)) {
-            return false;
+        if(!(new RegExp("^[\\w\\s\\-]+$")).test(shortDescription)) {
+            invalidReceiptError();
         }
 
-        runningTotalInCents += (parseFloat(item.price) * 100);
+        if(!(new RegExp("^\\d+\\.\\d{2}$")).test(price)) {
+            invalidReceiptError();
+        }
+
+        runningTotalInCents += (parseFloat(price) * 100);
     }
 
-    if(!(new RegExp("^\\d+\\.\\d{2}$")).test(receipt.total)) {
-        return false;
+    if(!(new RegExp("^\\d+\\.\\d{2}$")).test(total)) {
+        invalidReceiptError();
     }
 
-    if(runningTotalInCents !== (parseFloat(receipt.total) * 100)) { // ensure that receipt total actually adds up
-        return false;
+    if(runningTotalInCents !== (parseFloat(total) * 100)) { // ensure that receipt total actually adds up
+        invalidReceiptError();
     }
 
-    return true;
+    next();
 }
