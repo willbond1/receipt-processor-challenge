@@ -1,0 +1,1 @@
+export const pointMap: Record<string, number> = {};
