@@ -8,10 +8,11 @@
   },
   "scripts": {
     "docker:build": "sudo docker build -t receipt-processor-challenge .",
-    "docker:run": "sudo docker run -p 3000:3000 -d --name rpc_d receipt-processor-challenge",
+    "docker:start": "sudo docker run -p 3000:3000 -d --name rpc_d receipt-processor-challenge",
     "docker:stop": "sudo docker stop rpc_d",
     "docker:remove": "sudo docker rm rpc_d",
     "build": "tsc",
+    "start": "node build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
